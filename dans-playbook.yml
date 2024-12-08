@@ -1,0 +1,12 @@
+---
+- name: Deploy
+  hosts: nginx_server
+  become: true
+  roles:
+    - nginx
+
+- name: Deploy
+  hosts: apache_server
+  become: true
+  roles:
+    - apache
