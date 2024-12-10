@@ -1,7 +1,5 @@
 ---
-# tasks file for roles/apache
-
-# Удаление Apache и Nginx
+# Удаление Apache
 - name: Remove Apache and its configuration
   apt:
     name:
@@ -10,6 +8,7 @@
     state: absent
     purge: yes
 
+# Удаление Nginx
 - name: Remove Nginx and its configuration
   apt:
     name:
@@ -18,22 +17,26 @@
     state: absent
     purge: yes
 
+# Удаление файлов конфигурации Apache
 - name: Remove Apache configuration directory
   file:
     path: /etc/apache2
     state: absent
 
+# Удаление файлов конфигурации Nginx
 - name: Remove Nginx configuration directory
   file:
     path: /etc/nginx
     state: absent
 
+# Установка Apache
 - name: Install Apache
   apt:
     name: apache2
     state: present
     update_cache: yes
 
+# Запуск Apache
 - name: Start Apache
   service:
     name: apache2

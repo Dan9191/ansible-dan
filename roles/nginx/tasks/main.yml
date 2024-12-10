@@ -1,5 +1,7 @@
 ---
-# tasks file for roles/nginx
+# Задачи, запускаемые для nginx
+
+# Удаление Apache
 - name: Remove Apache and its configuration
   apt:
     name:
@@ -8,6 +10,7 @@
     state: absent
     purge: yes
 
+# Удаление Nginx
 - name: Remove Nginx and its configuration
   apt:
     name:
@@ -16,34 +19,26 @@
     state: absent
     purge: yes
 
+# Удаление файлов конфигурации Apache
 - name: Remove Apache configuration directory
   file:
     path: /etc/apache2
     state: absent
 
+# Удаление файлов конфигурации Nginx
 - name: Remove Nginx configuration directory
   file:
     path: /etc/nginx
     state: absent
 
+# Установка Nginx
 - name: Install Nginx
   apt:
     name: nginx
     state: present
     update_cache: yes
 
- # Открытие порта 80 для HTTP (если используется брандмауэр UFW)
-- name: Allow HTTP port 80 through firewall (UFW)
-  ufw:
-    rule: allow
-    name: 'Nginx HTTP'
-
-# Открытие порта 443 для HTTPS (если используется брандмауэр UFW)
-- name: Allow HTTPS port 443 through firewall (UFW)
-  ufw:
-    rule: allow
-    name: 'Nginx HTTPS'
-
+# Открытие порта 80 для HTTP
 - name: Configure Nginx to listen on external IP
   copy:
     dest: /etc/nginx/sites-available/default
@@ -52,22 +47,16 @@
           listen 80;
           listen [::]:80;
 
-          server_name 45.9.0.117;
+          server_name 45.9.40.117;
 
           root /var/www/html;
-          index index.html index.htm;
+          index index.html index.htm index.nginx-debian.html;
 
           location / {
               try_files $uri $uri/ =404;
           }
       }
+
+  # Хэндлера для перезапуска Nginx
   notify:
     - restart nginx
-
-#
-#- name: Update Nginx configuration to use port 8083
-#  replace:
-#    path: /etc/nginx/sites-available/default
-#    regexp: 'listen \d+'
-#    replace: 'listen 8083'
-#  become: yes
